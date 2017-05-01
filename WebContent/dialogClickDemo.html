@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DialogClickDemo</title>
+<meta name="viewport" content="initial-scale=1.0">
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/color.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/demo/demo.css">
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.6.min.js"></script>
+<script type="text/javascript"
+	src="http://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+<style>
+/* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+/* Optional: Makes the sample page fill the window. */
+html,body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+</style>
+</head>
+<body>
+	<div id="incidentsTab" class="easyui-tabs"
+		data-options="tabPosition:'left',headerWidth:140" style="">
+		<div title="Incidents" data-options="closable:true"
+			style="background: #F4FAE0; overflow: auto; display: none;">
+			<!-- 此处又加一个div,原因是外部div会受到easyui代码影响，
+			导致其高度无法设定，而采取自适应根据内容扩展；所以，此tab页面无法显示滚动条效果；
+			只有加入内部div，设定内部div的高度，才能出现滚动条 -->
+			<div id="incidentsWrap" data-options="closable:true"
+				style="padding:60px 5px 0px 5px;">
+				<table id="incidentsGrid" title="DATAGRID" class="easyui-datagrid"
+					data-options="fitColumns:false">
+					<thead>
+						<tr>
+							<th data-options="field:'name',width:100" formatter="formatName">name</th>
+							<th data-options="field:'age',width:100">age</th>
+							<th data-options="field:'sex',width:100">sex</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div title="Tab2" data-options="iconCls:'icon-reload',closable:true"
+			style="display: none;">tab3</div>
+	</div>
+	
+	<div id="nameClickedDialog" class="easyui-dialog" 
+	data-options="title:'Dialog',width:400,height:800,closed:true,modal:false,inline:false"></div>
+	<script type="text/javascript">
+	
+		$(function() {
+			$('#incidentsWrap').css('height', $(document).height() - 60);
+			/*Resize panel when window was resized*/
+			$(window).resize(function() {
+				$('#incidentsTab').tabs('resize');
+				$('#incidentsGrid').datagrid('resize');
+				$('#incidentsWrap').css('height', $(document).height() - 60);
+			});
+
+		});
+
+		/*Format the name field of datagrid*/
+		function formatName(value) {
+           return '<div><img src="image/del.gif" onclick="openComment()"></div>';
+		}
+		
+		function openComment(){
+			if (!$('#nameClickedDialog').parent().is(":hidden")) {
+				$("#nameClickedDialog").dialog('close');
+			} else {
+			    $('#nameClickedDialog').dialog({left:event.pageX,top:event.pageY});
+			    $('#nameClickedDialog').dialog('open');
+			}
+		}		
+
+		$('#incidentsGrid').datagrid({
+			rownumbers : true,
+			nowrap : false,
+			fitColumns : true,
+			singleSelect : true,
+			pagination : true,
+			pageSize : 10,
+			pagePosition : 'both',
+			striped : true,
+		});
+		
+		$('#incidentsGrid').datagrid({
+			data : [ {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			}, {
+				name : 'Harry',
+				age : 22,
+				sex : 'man'
+			} ]
+		});
+	</script>
+</body>
+</html>

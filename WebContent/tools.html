@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tools</title>
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/color.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/demo/demo.css">
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.6.min.js"></script>
+<script type="text/javascript"
+	src="http://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+</head>
+<style type="text/css">
+* {
+	padding: 0;
+}
+
+body {
+	margin: 0;
+	padding: 0
+}
+
+.incidentsHeader {
+	line-height: 20px;
+	vertical-align: bottom;
+}
+
+</style>
+<body>
+	<div class="header" style="height: 30px; background-color: #000"></div>
+	<div class="content" style="height: 80%; width: 100%; margin: auto;">
+		<div id="tabPanel" class="easyui-tabs" style="width: 500px; height: 700px;"
+			data-options="fit:true,tools:'#tab-tools'">
+			<div title="Incidents" data-options="">
+				<div style="height: 30px; padding-top: 10px; padding-left: 10px">
+					<span class="incidentsHeader">Reader:</span>
+					<input id="readerIdBox" class="easyui-combobox" data-options="">
+					<span class="incidentsHeader">Status:</span> 
+					<input id="statusIdBox" class="easyui-combobox" data-options="">
+					<span class="incidentsHeader">Type:</span> 
+					<input id="typeIdBox" class="easyui-combobox" data-options=""> 
+					<a href="javascript:void(0)" class="easyui-linkbutton incidentsHeader" 
+					   onclick="loadIncidents()" style="height: 20px">Show</a> 
+					<a href="javascript:void(0)" class="easyui-linkbutton incidentsHeader"
+						onclick="loadIncidents()" style="height: 20px">Delete</a>
+				</div>
+				<div id="dataArea"  style="width: 99%; margin: auto;">
+					<table id="incidentDataGrid" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true" style="height:620px">
+						<thead data-options="frozen:true">
+							<tr>
+								<th field="id" width="60" formatter="IdFormatter">id</th>
+							</tr>
+						</thead>
+						<thead>
+							<tr>
+								<th field="checked" width="55">checked</th>
+								<th field="link_id" width="80">link_id</th>
+								<th field="link_dir" width="30">dir</th>
+								<th field="end_link_id" width="80">end_link_id</th>
+								<th field="end_link_dir" width="50">end_dir</th>
+								<th field="mainSt" width="100">main</th>
+								<th field="mainDir" width="30">dir</th>
+								<th field="fromSt" width="100">from</th>
+								<th field="fromDir" width="30">dir</th>
+								<th field="toSt" width="100">to</th>
+								<th field="toDir" width="30">dir</th>
+								<th field="s_lat" width="60">slat</th>
+								<th field="s_long" width="60">slong</th>
+								<th field="e_lat" width="60">elat</th>
+								<th field="e_long" width="60">elong</th>
+								<th field="state" width="35">state</th>
+								<th field="city" width="35">city</th>
+								<th field="county" width="45">county</th>
+								<th field="type" width="30">type</th>
+								<th field="status" width="40">status</th>
+								<th field="start_time" width="120">start_time</th>
+								<th field="end_time" width="120">end_time</th>
+								<th field="updated_time" width="120">updated_time</th>
+								<th field="creation_time" width="120">creation_time</th>
+								<th field="mapUrl" width="120">mapurl</th>
+								<th field="ITIS_code" width="40">itis</th>
+								<th field="description" width="4000">description</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+			<div title="Help" data-options="iconCls:'icon-help',closable:true">div1</div>
+
+		</div>
+	</div>
+	<div id="tab-tools">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			data-options="plain:true,iconCls:'icon-add'" onclick="addPanel()"></a>
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			data-options="plain:true,iconCls:'icon-remove'"
+			onclick="removePanel()"></a>
+	</div>
+	<script type="text/javascript">
+		var index = 0;
+		var basePath = '/EasyUIProject';
+		
+		function addPanel(val) {
+			if (val != null && val.trim().maches(/\d+/)){
+				$('#tabPanel').tabs(
+						'add',
+						{
+							title : 'Tab' + index,
+							content : '<iframe src='+ basePath + 'servlet/queryDataServlet?dataType=incidentDetail&id="' + val +'"></iframe>',
+							closable : true
+						});
+			} else {
+				console.log('Value is invalid: ' + val);
+			}			
+		}
+		
+		function removePanel() {
+			var tab = $('#tabPanel').tabs('getSelected');
+			if (tab) {
+				var index = $('#tabPanel').tabs('getTabIndex', tab);
+				if (index != 0) {
+					$('#tabPanel').tabs('close', index);
+				} else {
+					console.log('Main page cannot be closed.')
+				}
+
+			}
+		}
+		
+		/*Avoid load readerId twice*/
+		window.setTimeout(function(){
+			$('#readerIdBox').combobox({
+				url:'./servlet/queryDataServlet?dataType=readerId',
+			    method:'get',
+			    onSelect: loadIncidents
+			});
+		}, 100);
+		
+		/*load incidents data*/
+		function loadIncidents(record) {
+			$('#incidentDataGrid').datagrid('loadData', { total: 0, rows: [] });
+			var value = record.value;
+			if (value != null && typeof value == 'string' && value.trim() != ''){
+				console.log('ReaderIdBox value : ' + value);
+				$('#incidentDataGrid').datagrid({
+					url:basePath + '/servlet/queryDataServlet?dataType=incidents',
+					queryParams:{readerId:value}
+				});
+			} else {
+				console.log('ReaderIdBox value is invalid.');
+			}	
+// 			$.ajax({
+// 				url : basePath + '/servlet/queryDataServlet?dataType=incidents',
+// 				method : 'post',
+				
+// 				dataType : 'json',
+// 				success : function(data) {
+
+// 				},
+// 				error : function() {
+// 					alert('Fail to load incidents data.')
+// 				}
+// 			})
+		}
+		
+		/*format the id*/
+
+		function IdFormatter(val, row) {
+			var htmlStr = '<a href="javascript:addTab(' + val + ');">'
+					+ val + '</a>';
+			return htmlStr;
+		}
+
+		/*Add tab*/
+	
+		function addTab(id) {
+			if (typeof id == 'number' && id > 0) {
+				// 				if (val != null && val.trim().maches(/\d+/)){
+				$('#tabPanel').tabs('add',
+								{
+									title : id,
+									content : '<iframe src="'
+											+ basePath
+											+ '/servlet/queryDataServlet?dataType=incidentDetail&id='
+											+ id + '" frameborder="no" scrolling="no" width="100%" height="100%"></iframe>',
+									closable : true
+								});
+				// 				} else {
+				// 					console.log('Value is invalid: ' + val);
+				// 				}			
+			} else {
+				console.log('Id is invalid: ' + id);
+			}
+
+		}
+	</script>
+</body>
+</html>
